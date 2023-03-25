@@ -4,11 +4,9 @@ import com.example.store.domain.Kategories;
 import com.example.store.domain.Store;
 import com.example.store.repository.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,8 +16,11 @@ public class StoreController {
     @Autowired
     private StoreRepository storeRepository;
 
+    @Value("${tutorial.hs.name}")
+    String tutorialName;
     @PostMapping("/api/v1/store")
     public ResponseEntity<Store> createstore(@RequestBody Store store){
+        /*store.setName(tutorialName);*/
 
         Store save = storeRepository.save(store);
         return ResponseEntity.ok(save);
@@ -31,6 +32,11 @@ public class StoreController {
         return  ResponseEntity.ok(all);
 
 
+    }
+    @GetMapping("/{owner}")
+    public ResponseEntity<List<Store>> getStoreByOwnerNameStartWith(@PathVariable String owner){
+        List<Store> allByOwnerStartsWith = (List<Store>) storeRepository.findAllByOwnerNameStartsWith(owner);
+        return ResponseEntity.ok(allByOwnerStartsWith);
     }
 
 
